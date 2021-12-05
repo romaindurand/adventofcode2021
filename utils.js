@@ -1,8 +1,7 @@
-import path from "path";
 import fs from "fs";
 import { URL } from "url";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = new URL(".", import.meta.url).pathname.replace(/^\//, '');
 
 /**
  *
@@ -11,11 +10,12 @@ const __dirname = new URL(".", import.meta.url).pathname;
  */
 export async function readFile(filePath) {
   return new Promise((resolve, reject) => {
-    fs.readFile(path.resolve(__dirname, filePath), "utf8", (err, data) => {
+    console.log('reading inputs from ', __dirname + filePath)
+    fs.readFile(__dirname + filePath, "utf8", (err, data) => {
       if (err) {
         reject(err);
       } else {
-        resolve(data.split("\n"));
+        resolve(data.split("\n").map(line => line.replace('\r', '')));
       }
     });
   });
